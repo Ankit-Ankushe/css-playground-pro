@@ -1,5 +1,5 @@
 import { lazy, Suspense } from "react";
-import { AlertTriangle, Code2, RotateCcw } from "lucide-react";
+import { AlertTriangle, Code2, RotateCcw, Wand2 } from "lucide-react";
 import { ClientOnly } from "@tanstack/react-router";
 
 const CodeMirrorField = lazy(() => import("./CodeMirrorField"));
@@ -12,7 +12,14 @@ function EditorFallback({ value }) {
   );
 }
 
-export default function CodeEditor({ value, onChange, onReset, error }) {
+export default function CodeEditor({
+  value,
+  onChange,
+  onReset,
+  onAutoFill,
+  error,
+  targetClass = "red-box",
+}) {
   return (
     <section className="card-soft flex h-full flex-col overflow-hidden">
       <div className="flex shrink-0 items-center justify-between gap-3 border-b border-border px-5 py-3">
@@ -20,14 +27,26 @@ export default function CodeEditor({ value, onChange, onReset, error }) {
           <Code2 className="size-4 text-primary" />
           Your CSS
         </h3>
-        <button
-          type="button"
-          onClick={onReset}
-          className="flex items-center gap-1.5 rounded-full border border-border px-3 py-1.5 text-xs font-semibold text-muted-foreground transition-colors hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
-        >
-          <RotateCcw className="size-3.5" />
-          Reset code
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={onAutoFill}
+            className="flex items-center gap-1.5 rounded-full border border-primary/40 bg-primary/10 px-3 py-1.5 text-xs font-semibold text-primary transition-all hover:bg-primary hover:text-primary-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+            title="Auto-fill the solution code"
+          >
+            <Wand2 className="size-3.5" />
+            <span>Auto-fill answer</span>
+          </button>
+          <button
+            type="button"
+            onClick={onReset}
+            className="flex items-center gap-1.5 rounded-full border border-border px-3 py-1.5 text-xs font-semibold text-muted-foreground transition-colors hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+            title="Reset code to default template"
+          >
+            <RotateCcw className="size-3.5" />
+            <span>Reset code</span>
+          </button>
+        </div>
       </div>
 
       <div className="flex-1 bg-editor">
@@ -45,7 +64,7 @@ export default function CodeEditor({ value, onChange, onReset, error }) {
         </p>
       ) : (
         <p className="shrink-0 border-t border-border px-5 py-3 text-xs text-muted-foreground">
-          Only the <span className="font-mono">.red-box</span> rules are yours — the HTML stays
+          Only the <span className="font-mono font-semibold">.{targetClass}</span> rules are yours — the HTML stays
           locked, and your CSS only affects the playground.
         </p>
       )}

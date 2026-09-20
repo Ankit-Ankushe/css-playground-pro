@@ -1,27 +1,39 @@
 import { Check, Circle, Code } from "lucide-react";
-import { HTML_SNIPPET } from "../utils/cssSandbox";
+import { getHtmlSnippet } from "../utils/cssSandbox";
 
 export default function ChallengeInstructions({ lesson, checks }) {
+  const htmlSnippet = getHtmlSnippet(lesson);
+  const moduleIndex = lesson.moduleIndex || lesson.index;
+  const moduleTotal = lesson.moduleTotal || 10;
+  const moduleTitle = lesson.moduleTitle || "Box Placement Quests";
+
   return (
     <section className="card-soft p-5 sm:p-6">
       <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
         <div className="max-w-3xl">
-          <p className="text-xs font-bold tracking-widest text-primary uppercase">
-            Lesson {lesson.index} · {lesson.subtitle}
-          </p>
-          <h2 className="mt-1 text-2xl font-bold sm:text-3xl">{lesson.title}</h2>
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="rounded-md bg-primary/10 px-2.5 py-0.5 text-xs font-bold tracking-wider text-primary uppercase">
+              {moduleTitle}
+            </span>
+            <span className="text-xs font-bold text-muted-foreground uppercase">
+              · Quest {moduleIndex} of {moduleTotal}
+            </span>
+            <span className="text-xs font-semibold text-muted-foreground">·</span>
+            <span className="text-xs font-semibold text-muted-foreground">{lesson.subtitle}</span>
+          </div>
+          <h2 className="mt-1.5 text-2xl font-bold sm:text-3xl">{lesson.title}</h2>
           <p className="mt-2 text-sm leading-relaxed text-muted-foreground sm:text-base">
             {lesson.description}
           </p>
         </div>
 
-        <details className="shrink-0 rounded-xl border border-border bg-muted/60 p-3 text-sm lg:w-72">
+        <details className="shrink-0 rounded-xl border border-border bg-muted/60 p-3 text-sm lg:w-80">
           <summary className="flex cursor-pointer select-none items-center gap-2 font-semibold">
             <Code className="size-4 text-muted-foreground" />
-            Locked HTML
+            Locked HTML (<span className="font-mono text-xs">.{lesson.targetClass}</span>)
           </summary>
-          <pre className="mt-2 overflow-x-auto rounded-lg bg-card/80 p-2 font-mono text-xs leading-relaxed text-muted-foreground">
-            {HTML_SNIPPET}
+          <pre className="mt-2 overflow-x-auto rounded-lg bg-card/80 p-2.5 font-mono text-xs leading-relaxed text-muted-foreground">
+            {htmlSnippet}
           </pre>
         </details>
       </div>

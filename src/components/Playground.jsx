@@ -5,7 +5,13 @@ import { validateLesson } from "../utils/cssValidator";
 
 export default function Playground({ lesson, css, result, onResult }) {
   const frameRef = useRef(null);
-  const doc = buildPreviewDocument({ userCss: css, stage: lesson.stage, target: lesson.target });
+  const doc = buildPreviewDocument({
+    userCss: css,
+    stage: lesson.stage,
+    target: lesson.target,
+    targetClass: lesson.targetClass,
+    lesson,
+  });
 
   useEffect(() => {
     let cancelled = false;
@@ -37,12 +43,15 @@ export default function Playground({ lesson, css, result, onResult }) {
           Live Preview
         </h3>
         <span className="text-xs font-semibold text-muted-foreground">
-          live preview · updates as you type
+          {lesson.type === "flexbox"
+            ? "flex container sandbox"
+            : "live preview · updates as you type"}
         </span>
       </div>
 
       <div className="flex flex-1 items-center justify-center bg-playground p-3 sm:p-4">
         <iframe
+          key={lesson.id}
           ref={frameRef}
           title="CSS playground preview"
           sandbox="allow-same-origin"
@@ -51,7 +60,9 @@ export default function Playground({ lesson, css, result, onResult }) {
         />
       </div>
 
-      <div className={`flex shrink-0 items-start gap-2 border-t px-5 py-3 text-sm font-semibold ${tone}`}>
+      <div
+        className={`flex shrink-0 items-start gap-2 border-t px-5 py-3 text-sm font-semibold ${tone}`}
+      >
         {result.passed && <CheckCircle2 className="mt-0.5 size-4 shrink-0" />}
         <p>{result.message}</p>
       </div>
